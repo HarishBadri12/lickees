@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lickees — Ice Cream Shop · Mangalam, Tirupati</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;1,400&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink:    #FF6B9D;
+    --pink-lt: #FFB3CE;
+    --pink-bg: #FFF0F5;
+    --mint:    #4ECDC4;
+    --mint-lt: #A8F0EB;
+    --yellow:  #FFE66D;
+    --orange:  #FF9F43;
+    --purple:  #C77DFF;
+    --sky:     #74C0FC;
+    --cream:   #FFF8F0;
+    --brown:   #5C3317;
+    --dark:    #2B1B17;
+    --text:    #3D2314;
+    --muted:   #9E7B6E;
+    --white:   #FFFFFF;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='24'%3E🍦%3C/text%3E%3C/svg%3E") 16 16, auto;
+  }
+
+  /* Wavy separator */
+  .wave-sep {
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+  }
+  .wave-sep svg { display: block; width: 100%; }
+
+  /* ── FLOATING BLOBS ── */
+  .blob-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.18;
+    animation: blobFloat 12s ease-in-out infinite alternate;
+  }
+  .blob-1 { width: 500px; height: 500px; background: var(--pink); top: -100px; left: -100px; animation-duration: 14s; }
+  .blob-2 { width: 400px; height: 400px; background: var(--mint); top: 30%; right: -80px; animation-duration: 10s; animation-delay: -4s; }
+  .blob-3 { width: 350px; height: 350px; background: var(--yellow); bottom: 10%; left: 20%; animation-duration: 16s; animation-delay: -8s; }
+  .blob-4 { width: 300px; height: 300px; background: var(--purple); bottom: 30%; right: 10%; animation-duration: 11s; animation-delay: -2s; }
+
+  @keyframes blobFloat {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(30px, 20px) scale(1.05); }
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 50px;
+    background: rgba(255,248,240,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 2px dashed rgba(255,107,157,0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Pacifico', cursive;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, var(--pink), var(--orange));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0; right: 0;
+    height: 2px;
+    background: var(--pink);
+    border-radius: 2px;
+    transform: scaleX(0);
+    transition: transform 0.3s;
+  }
+  .nav-links a:hover { color: var(--pink); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .nav-cta {
+    background: linear-gradient(135deg, var(--pink), var(--orange));
+    color: white !important;
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 15px rgba(255,107,157,0.4);
+    transition: transform 0.2s, box-shadow 0.2s !important;
+  }
+  .nav-cta::after { display: none !important; }
+  .nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 20px rgba(255,107,157,0.5) !important; color: white !important; }
+
+  /* ── HERO ── */
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 120px 60px 60px;
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  .hero-left {
+    flex: 1;
+    z-index: 2;
+  }
+
+  .hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--yellow);
+    color: var(--brown);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    animation: fadeSlideUp 0.8s 0.2s both;
+    box-shadow: 0 4px 12px rgba(255,230,109,0.5);
+  }
+
+  .hero-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(4rem, 9vw, 8rem);
+    line-height: 0.95;
+    color: var(--dark);
+    margin-bottom: 16px;
+    animation: fadeSlideUp 0.8s 0.4s both;
+  }
+
+  .hero-title .accent {
+    background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-title .accent-2 {
+    background: linear-gradient(135deg, var(--mint) 0%, var(--sky) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    line-height: 1.8;
+    max-width: 420px;
+    margin-bottom: 40px;
+    animation: fadeSlideUp 0.8s 0.6s both;
+    font-weight: 400;
+  }
+
+  .hero-sub strong { color: var(--text); }
+
+  .hero-pills {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    animation: fadeSlideUp 0.8s 0.8s both;
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border: 2px solid currentColor;
+  }
+  .pill-pink { color: var(--pink); background: rgba(255,107,157,0.08); border-color: rgba(255,107,157,0.3); }
+  .pill-mint { color: var(--mint); background: rgba(78,205,196,0.08); border-color: rgba(78,205,196,0.3); }
+  .pill-purple { color: var(--purple); background: rgba(199,125,255,0.08); border-color: rgba(199,125,255,0.3); }
+
+  .hero-btns {
+    display: flex;
+    gap: 16px;
+    animation: fadeSlideUp 0.8s 1s both;
+  }
+
+  .btn-main {
+    background: linear-gradient(135deg, var(--pink), var(--orange));
+    color: white;
+    padding: 16px 36px;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 6px 20px rgba(255,107,157,0.45);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+  }
+  .btn-main:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 10px 28px rgba(255,107,157,0.5); }
+
+  .btn-sec {
+    background: white;
+    color: var(--pink);
+    padding: 16px 36px;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    text-decoration: none;
+    border: 2px solid rgba(255,107,157,0.3);
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-sec:hover { border-color: var(--pink); background: rgba(255,107,157,0.05); transform: translateY(-3px); }
+
+  /* Big ice cream visual */
+  .cone-visual {
+    font-size: clamp(180px, 22vw, 260px);
+    animation: coneFloat 4s ease-in-out infinite, fadeSlideUp 0.8s 0.5s both;
+    filter: drop-shadow(0 30px 40px rgba(255,107,157,0.3));
+    line-height: 1;
+    text-align: center;
+  }
+
+  @keyframes coneFloat {
+    0%, 100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(-20px) rotate(3deg); }
+  }
+
+  /* Floating emoji */
+  .float-emoji {
+    position: absolute;
+    font-size: 2rem;
+    animation: emojiFloat 6s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .fe-1 { top: 20%; left: 55%; animation-delay: 0s; font-size: 2.5rem; }
+  .fe-2 { top: 65%; left: 60%; animation-delay: -2s; }
+  .fe-3 { top: 35%; right: 5%; animation-delay: -4s; font-size: 1.8rem; }
+  .fe-4 { top: 75%; right: 15%; animation-delay: -1s; font-size: 2.2rem; }
+
+  @keyframes emojiFloat {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    33% { transform: translateY(-15px) rotate(8deg); }
+    66% { transform: translateY(8px) rotate(-5deg); }
+  }
+
+  @keyframes fadeSlideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Rating strip */
+  .rating-strip {
+    position: absolute;
+    bottom: 40px; left: 60px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background: white;
+    padding: 16px 24px;
+    border-radius: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    animation: fadeSlideUp 0.8s 1.2s both;
+    z-index: 2;
+  }
+
+  .rating-stars { font-size: 1.1rem; letter-spacing: 2px; }
+  .rating-text .big { font-family: 'Fredoka One', cursive; font-size: 1.4rem; color: var(--pink); }
+  .rating-text .sm { font-size: 0.72rem; color: var(--muted); font-weight: 600; letter-spacing: 0.5px; }
+
+  /* ── HIGHLIGHTS ── */
+  .highlights {
+    position: relative;
+    z-index: 1;
+    padding: 80px 60px;
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .hl-card {
+    flex: 1;
+    background: white;
+    border-radius: 24px;
+    padding: 36px 28px;
+    text-align: center;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+    border: 2px solid transparent;
+    transition: transform 0.3s, border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hl-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .hl-card-pink::before { background: linear-gradient(to right, var(--pink), var(--orange)); }
+  .hl-card-mint::before { background: linear-gradient(to right, var(--mint), var(--sky)); }
+  .hl-card-purple::before { background: linear-gradient(to right, var(--purple), var(--pink)); }
+
+  .hl-card:hover { transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.1); }
+  .hl-card-pink:hover { border-color: rgba(255,107,157,0.2); }
+  .hl-card-mint:hover { border-color: rgba(78,205,196,0.2); }
+  .hl-card-purple:hover { border-color: rgba(199,125,255,0.2); }
+
+  .hl-icon { font-size: 3rem; margin-bottom: 16px; display: block; }
+  .hl-title { font-family: 'Fredoka One', cursive; font-size: 1.3rem; color: var(--dark); margin-bottom: 10px; }
+  .hl-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.7; }
+
+  /* ── MENU SECTION ── */
+  .menu-sec {
+    background: linear-gradient(160deg, #FFF0FA 0%, #F0FFFE 50%, #FFF8E8 100%);
+    padding: 100px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .sec-header {
+    text-align: center;
+    margin-bottom: 60px;
+  }
+
+  .sec-eyebrow {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--pink), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+
+  .sec-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2.2rem, 4vw, 3.2rem);
+    color: var(--dark);
+    margin-bottom: 14px;
+  }
+
+  .sec-desc {
+    font-size: 0.95rem;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto;
+    line-height: 1.8;
+  }
+
+  .menu-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .menu-item {
+    background: white;
+    border-radius: 20px;
+    padding: 28px 20px 24px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .menu-item:hover { transform: translateY(-6px) rotate(1deg); box-shadow: 0 16px 40px rgba(0,0,0,0.1); }
+
+  .menu-emoji { font-size: 3.5rem; margin-bottom: 14px; display: block; }
+  .menu-name { font-family: 'Fredoka One', cursive; font-size: 1.1rem; color: var(--dark); margin-bottom: 8px; }
+  .menu-note { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+  .badge-new {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--pink);
+    color: white;
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 50px;
+  }
+
+  .badge-fav {
+    position: absolute;
+    top: 12px; right: 12px;
+    background: var(--yellow);
+    color: var(--brown);
+    font-size: 0.6rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 50px;
+  }
+
+  /* ── REVIEWS ── */
+  .reviews-sec {
+    padding: 100px 60px;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .reviews-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .review-card {
+    background: white;
+    border-radius: 20px;
+    padding: 32px 26px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    position: relative;
+  }
+
+  .review-card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,0.09); }
+
+  .review-card-1 { border-top: 4px solid var(--pink); }
+  .review-card-2 { border-top: 4px solid var(--mint); }
+  .review-card-3 { border-top: 4px solid var(--purple); }
+
+  .rv-stars { font-size: 1rem; margin-bottom: 14px; letter-spacing: 2px; }
+  .rv-text { font-size: 0.9rem; color: var(--text); line-height: 1.8; margin-bottom: 20px; font-style: italic; }
+  .rv-author { display: flex; align-items: center; gap: 12px; }
+  .rv-avatar {
+    width: 42px; height: 42px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Fredoka One', cursive; font-size: 1.2rem; color: white;
+  }
+  .av-pink { background: linear-gradient(135deg, var(--pink), var(--orange)); }
+  .av-mint { background: linear-gradient(135deg, var(--mint), var(--sky)); }
+  .av-purple { background: linear-gradient(135deg, var(--purple), var(--pink)); }
+  .rv-name { font-weight: 700; font-size: 0.88rem; color: var(--dark); }
+  .rv-meta { font-size: 0.72rem; color: var(--muted); }
+
+  /* Big rating display */
+  .rating-showcase {
+    background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 100%);
+    border-radius: 28px;
+    padding: 50px 40px;
+    text-align: center;
+    color: white;
+    margin-bottom: 50px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rating-showcase::before {
+    content: '🍦🍧🍨🍦🍧🍨🍦🍧';
+    position: absolute;
+    top: -10px; left: 0; right: 0;
+    font-size: 3rem;
+    opacity: 0.12;
+    letter-spacing: 10px;
+  }
+
+  .rs-number {
+    font-family: 'Fredoka One', cursive;
+    font-size: 5rem;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .rs-stars { font-size: 1.8rem; letter-spacing: 6px; margin-bottom: 12px; }
+  .rs-label { font-size: 0.9rem; opacity: 0.85; font-weight: 600; letter-spacing: 1px; }
+
+  /* ── VISIT ── */
+  .visit-sec {
+    background: linear-gradient(160deg, #FFF0FA 0%, #F0FFFE 100%);
+    padding: 100px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .visit-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 60px;
+    align-items: start;
+  }
+
+  .hours-card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  }
+
+  .hours-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .hour-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.06);
+    font-size: 0.88rem;
+  }
+  .hour-row .day { color: var(--muted); font-weight: 600; }
+  .hour-row .time { color: var(--text); font-weight: 700; }
+  .hour-row.closed .time { color: #E74C3C; }
+  .hour-today .day { color: var(--pink); font-weight: 800; }
+  .hour-today .time { color: var(--pink); font-weight: 800; }
+
+  .contact-card {
+    background: white;
+    border-radius: 24px;
+    padding: 40px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  }
+
+  .contact-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.5rem;
+    color: var(--dark);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cinfo {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.06);
+  }
+
+  .cinfo-icon {
+    font-size: 1.4rem;
+    flex-shrink: 0;
+    width: 42px; height: 42px;
+    background: var(--pink-bg);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cinfo-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 3px; }
+  .cinfo-val { font-size: 0.9rem; font-weight: 700; color: var(--text); }
+
+  /* ── CTA ── */
+  .cta-sec {
+    padding: 80px 60px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  .cta-inner-box {
+    max-width: 700px;
+    margin: 0 auto;
+    background: linear-gradient(135deg, var(--pink) 0%, var(--purple) 60%, var(--sky) 100%);
+    border-radius: 32px;
+    padding: 70px 60px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(255,107,157,0.35);
+  }
+
+  .cta-inner-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.15) 0%, transparent 60%);
+  }
+
+  .cta-emoji { font-size: 4rem; margin-bottom: 20px; animation: coneFloat 3s ease-in-out infinite; display: block; }
+  .cta-title { font-family: 'Fredoka One', cursive; font-size: 2.5rem; color: white; margin-bottom: 16px; position: relative; }
+  .cta-sub { font-size: 1rem; color: rgba(255,255,255,0.85); margin-bottom: 36px; line-height: 1.7; position: relative; }
+
+  .btn-cta {
+    background: white;
+    color: var(--pink);
+    padding: 18px 48px;
+    border-radius: 50px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    text-decoration: none;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: inline-block;
+    position: relative;
+  }
+  .btn-cta:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 14px 32px rgba(0,0,0,0.2); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--dark);
+    padding: 60px;
+    text-align: center;
+    color: rgba(255,255,255,0.5);
+    font-size: 0.82rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  .footer-logo {
+    font-family: 'Pacifico', cursive;
+    font-size: 2.2rem;
+    background: linear-gradient(135deg, var(--pink), var(--yellow));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  .footer-tagline { margin-bottom: 30px; color: rgba(255,255,255,0.4); letter-spacing: 1px; }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    list-style: none;
+    margin-bottom: 30px;
+  }
+
+  .footer-links a {
+    text-decoration: none;
+    color: rgba(255,255,255,0.4);
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--pink); }
+
+  .footer-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    .hero { flex-direction: column; text-align: center; padding: 100px 24px 60px; gap: 40px; }
+    .hero-sub { margin: 0 auto 30px; }
+    .hero-pills { justify-content: center; }
+    .hero-btns { justify-content: center; flex-wrap: wrap; }
+    .rating-strip { left: 50%; transform: translateX(-50%); width: max-content; bottom: 20px; }
+    .highlights { flex-direction: column; padding: 60px 24px; }
+    .menu-grid { grid-template-columns: repeat(2, 1fr); padding: 0; }
+    .reviews-grid { grid-template-columns: 1fr; }
+    .visit-inner { grid-template-columns: 1fr; }
+    .menu-sec, .reviews-sec, .visit-sec, .cta-sec { padding: 60px 24px; }
+    .cta-inner-box { padding: 50px 30px; }
+    footer { padding: 40px 24px; }
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div class="blob-bg">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+  <div class="blob blob-4"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Lickees 🍦</div>
+  <ul class="nav-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#visit">Visit Us</a></li>
+    <li><a href="tel:07780448167" class="nav-cta">📞 Call Us</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-left">
+    <div class="hero-badge">🌟 5.0 Rating · 67 Happy Customers</div>
+    <h1 class="hero-title">
+      Life's<br>
+      <span class="accent">Sweeter</span><br>
+      <span class="accent-2">Here!</span>
+    </h1>
+    <p class="hero-sub">Tirupati's most-loved ice cream shop in <strong>Mangalam</strong> — where every scoop is made with joy, fresh ingredients, and a whole lot of love. 🍨</p>
+    <div class="hero-pills">
+      <span class="pill pill-pink">🍭 Fresh Daily</span>
+      <span class="pill pill-mint">🌿 Natural Flavors</span>
+      <span class="pill pill-purple">🎉 Party Venue</span>
+    </div>
+    <div class="hero-btns">
+      <a href="#menu" class="btn-main">See Our Flavors 🍦</a>
+      <a href="tel:07780448167" class="btn-sec">Call Us</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <span class="cone-visual">🍦</span>
+    <span class="float-emoji fe-1">🍧</span>
+    <span class="float-emoji fe-2">🍬</span>
+    <span class="float-emoji fe-3">🌟</span>
+    <span class="float-emoji fe-4">🍨</span>
+  </div>
+
+  <div class="rating-strip">
+    <div class="rating-stars">⭐⭐⭐⭐⭐</div>
+    <div class="rating-text">
+      <div class="big">5.0 / 5.0</div>
+      <div class="sm">67 Google Reviews</div>
+    </div>
+  </div>
+</section>
+
+<!-- HIGHLIGHTS -->
+<div class="highlights">
+  <div class="hl-card hl-card-pink reveal">
+    <span class="hl-icon">🍦</span>
+    <div class="hl-title">Creamy & Fresh</div>
+    <p class="hl-desc">Every scoop is crafted fresh daily with real ingredients — creamy, rich, and bursting with flavor in every bite.</p>
+  </div>
+  <div class="hl-card hl-card-mint reveal">
+    <span class="hl-icon">🌿</span>
+    <div class="hl-title">Natural Flavors</div>
+    <p class="hl-desc">Try our famous tender coconut popsicle and other all-natural fruit-based flavors. Pure goodness, zero guilt!</p>
+  </div>
+  <div class="hl-card hl-card-purple reveal">
+    <span class="hl-icon">🎊</span>
+    <div class="hl-title">Birthday Parties</div>
+    <p class="hl-desc">The perfect party destination for your birthday bash! Great vibes, innovative decor, and unlimited sweet memories.</p>
+  </div>
+</div>
+
+<!-- MENU -->
+<section class="menu-sec" id="menu">
+  <div class="sec-header">
+    <span class="sec-eyebrow">What We Scoop</span>
+    <h2 class="sec-title">Our Flavors & Treats 🍧</h2>
+    <p class="sec-desc">From creamy classics to innovative fruit popsicles — there's something delicious for everyone at Lickees!</p>
+  </div>
+
+  <div class="menu-grid">
+    <div class="menu-item reveal">
+      <span class="badge-fav">⭐ Fan Fave</span>
+      <span class="menu-emoji">🥥</span>
+      <div class="menu-name">Tender Coconut</div>
+      <p class="menu-note">Best natural popsicle in town. Fresh, cooling & absolutely delicious.</p>
+    </div>
+    <div class="menu-item reveal">
+      <span class="badge-new">New</span>
+      <span class="menu-emoji">🍓</span>
+      <div class="menu-name">Fruit Popsicles</div>
+      <p class="menu-note">Awesome innovative popsicles bursting with real fruit flavor.</p>
+    </div>
+    <div class="menu-item reveal">
+      <span class="menu-emoji">🍦</span>
+      <div class="menu-name">Soft Serve</div>
+      <p class="menu-note">Silky smooth soft serve in classic and seasonal flavors.</p>
+    </div>
+    <div class="menu-item reveal">
+      <span class="menu-emoji">🍨</span>
+      <div class="menu-name">Scoops</div>
+      <p class="menu-note">A great variety of flavors — creamy, fresh, and full of taste.</p>
+    </div>
+    <div class="menu-item reveal">
+      <span class="menu-emoji">🧁</span>
+      <div class="menu-name">Sundaes</div>
+      <p class="menu-note">Layered scoops with toppings, sauces and a cherry on top!</p>
+    </div>
+    <div class="menu-item reveal">
+      <span class="menu-emoji">🥤</span>
+      <div class="menu-name">Milkshakes</div>
+      <p class="menu-note">Thick, creamy shakes in a rainbow of flavors. The perfect treat.</p>
+    </div>
+    <div class="menu-item reveal">
+      <span class="menu-emoji">🧊</span>
+      <div class="menu-name">Slushies</div>
+      <p class="menu-note">Ice-cold fruit slushies — the perfect antidote to Tirupati's heat!</p>
+    </div>
+    <div class="menu-item reveal">
+      <span class="badge-fav">🎉 Party</span>
+      <span class="menu-emoji">🎂</span>
+      <div class="menu-name">Party Packages</div>
+      <p class="menu-note">Book Lickees for your birthday bash. Ice cream for everyone!</p>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-sec" id="reviews">
+  <div class="sec-header">
+    <span class="sec-eyebrow">Sweet Words</span>
+    <h2 class="sec-title">What Our Fans Say 💬</h2>
+  </div>
+
+  <div class="rating-showcase reveal">
+    <div class="rs-number">5.0</div>
+    <div class="rs-stars">⭐⭐⭐⭐⭐</div>
+    <div class="rs-label">67 Reviews · Mangalam's Happiest Ice Cream Shop</div>
+  </div>
+
+  <div class="reviews-grid">
+    <div class="review-card review-card-1 reveal">
+      <div class="rv-stars">⭐⭐⭐⭐⭐</div>
+      <p class="rv-text">"Best place to hangout with friends and family — innovative arts, awesome fruit popsicles. The vibes are immaculate!"</p>
+      <div class="rv-author">
+        <div class="rv-avatar av-pink">G</div>
+        <div>
+          <div class="rv-name">G K</div>
+          <div class="rv-meta">3 Reviews · 2 Photos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card review-card-2 reveal">
+      <div class="rv-stars">⭐⭐⭐⭐⭐</div>
+      <p class="rv-text">"Lovely little ice cream shop with a great variety of flavors! The ice cream is creamy, fresh, and full of taste. Cozy atmosphere, friendly staff!"</p>
+      <div class="rv-author">
+        <div class="rv-avatar av-mint">B</div>
+        <div>
+          <div class="rv-name">Balaji</div>
+          <div class="rv-meta">3 Reviews · 14 Photos</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="review-card review-card-3 reveal">
+      <div class="rv-stars">⭐⭐⭐⭐⭐</div>
+      <p class="rv-text">"Taste the best natural one — the tender coconut is absolutely divine! Also the best birthday party place for friends 🎊🎂🍨"</p>
+      <div class="rv-author">
+        <div class="rv-avatar av-purple">B</div>
+        <div>
+          <div class="rv-name">Bunny Sree</div>
+          <div class="rv-meta">9 Reviews</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section class="visit-sec" id="visit">
+  <div class="sec-header">
+    <span class="sec-eyebrow">Find Us</span>
+    <h2 class="sec-title">Come Visit Us! 📍</h2>
+  </div>
+
+  <div class="visit-inner">
+    <div class="hours-card reveal">
+      <div class="hours-title">🕐 Opening Hours</div>
+      <div class="hour-row closed">
+        <span class="day">Monday</span>
+        <span class="time">Closed</span>
+      </div>
+      <div class="hour-row"><span class="day">Tuesday</span><span class="time">11:00 AM – 10:30 PM</span></div>
+      <div class="hour-row"><span class="day">Wednesday</span><span class="time">11:00 AM – 10:30 PM</span></div>
+      <div class="hour-row"><span class="day">Thursday</span><span class="time">11:00 AM – 10:30 PM</span></div>
+      <div class="hour-row"><span class="day">Friday</span><span class="time">11:00 AM – 10:30 PM</span></div>
+      <div class="hour-row"><span class="day">Saturday</span><span class="time">11:00 AM – 10:30 PM</span></div>
+      <div class="hour-row"><span class="day">Sunday</span><span class="time">11:00 AM – 10:30 PM</span></div>
+    </div>
+
+    <div class="contact-card reveal">
+      <div class="contact-title">📬 Get in Touch</div>
+      <div class="cinfo">
+        <div class="cinfo-icon">📞</div>
+        <div>
+          <div class="cinfo-label">Phone</div>
+          <div class="cinfo-val">077804 48167</div>
+        </div>
+      </div>
+      <div class="cinfo">
+        <div class="cinfo-icon">📍</div>
+        <div>
+          <div class="cinfo-label">Address</div>
+          <div class="cinfo-val">9-57, Mangalam Quarters, Mangalam, Tirupati – 517509</div>
+        </div>
+      </div>
+      <div class="cinfo">
+        <div class="cinfo-icon">🗺️</div>
+        <div>
+          <div class="cinfo-label">Plus Code</div>
+          <div class="cinfo-val">MF38+J3 Mangalam, AP</div>
+        </div>
+      </div>
+      <div class="cinfo" style="border:none;">
+        <div class="cinfo-icon">⭐</div>
+        <div>
+          <div class="cinfo-label">Rating</div>
+          <div class="cinfo-val">5.0 / 5.0 · 67 Reviews</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-sec">
+  <div class="cta-inner-box">
+    <span class="cta-emoji">🍦</span>
+    <h2 class="cta-title">Craving Something Sweet?</h2>
+    <p class="cta-sub">Visit us at Mangalam for the most delightful ice cream experience in Tirupati. Open Tuesday to Sunday, 11 AM onwards!</p>
+    <a href="tel:07780448167" class="btn-cta">📞 Call 077804 48167</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">Lickees 🍦</span>
+  <p class="footer-tagline">Mangalam Quarters, Tirupati · Andhra Pradesh</p>
+  <ul class="footer-links">
+    <li><a href="#menu">Menu</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#visit">Visit</a></li>
+    <li><a href="tel:07780448167">Call Us</a></li>
+  </ul>
+  <p class="footer-copy">Open Tue–Sun · 11:00 AM – 10:30 PM · 077804 48167 · Closed Mondays</p>
+</footer>
+
+<script>
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => {
+          e.target.classList.add('visible');
+        }, 80 * (Array.from(e.target.parentElement?.children || []).indexOf(e.target)));
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
